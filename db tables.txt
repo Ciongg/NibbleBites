@@ -1,0 +1,16 @@
+Recipe
+
+foreign key user_id
+name
+description
+ingredients
+time_taken
+calories
+difficulty
+
+pivot table
+
+recipe_user_favorites
+id
+user_id
+recipe_id
