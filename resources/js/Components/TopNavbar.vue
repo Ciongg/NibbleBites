@@ -1,7 +1,10 @@
 <template>
   <nav class="top-navbar">
     <div class="navbar-content">
-      <Link href="/" class="brand">NibbleNotes</Link>
+      <Link href="/" class="brand">
+        <img :src="nibbledIcon" alt="NibbleNotes" class="brand-icon" />
+        NibbleNotes
+      </Link>
       
       <div class="nav-buttons">
 
@@ -20,7 +23,7 @@
 
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import homeIcon from '@/Assets/img/Home.svg';
+import nibbledIcon from '@/Assets/img/Nibbled.svg';
 import loginIcon from '@/Assets/img/Login.svg';
 import registerIcon from '@/Assets/img/Register.svg';
 </script>
@@ -45,6 +48,14 @@ import registerIcon from '@/Assets/img/Register.svg';
   margin: 0;
   text-decoration: none;
   transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
 }
 
 .brand:hover {

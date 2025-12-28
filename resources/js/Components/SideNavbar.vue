@@ -1,6 +1,9 @@
 <template>
   <aside class="sidebar">
-    <h2 class="sidebar-title">NibbleNotes</h2>
+    <h2 class="sidebar-title">
+      <img :src="nibbledIcon" alt="NibbleNotes" class="title-icon" />
+      NibbleNotes
+    </h2>
     
     <div class="user-profile">
       <div class="user-avatar">
@@ -18,23 +21,27 @@
     </div>
 
     <nav class="sidebar-nav">
-      <button class="sidebar-btn active">
+      <button class="sidebar-btn active" @click="goToDashboard">
+        <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+        Dashboard
+      </button>
+      <button class="sidebar-btn">
         <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
           <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
         </svg>
         Your Recipes
       </button>
       <button class="sidebar-btn">
+        <img :src="nibbledIcon" alt="" class="btn-icon" />
+        Nibbled
+      </button>
+      <button class="sidebar-btn">
         <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
         </svg>
         Profile
-      </button>
-      <button class="sidebar-btn">
-        <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-        </svg>
-        Favorites
       </button>
     </nav>
 
@@ -49,6 +56,7 @@
 
 <script setup>
 import { router } from '@inertiajs/vue3';
+import nibbledIcon from '@/Assets/img/Nibbled.svg';
 
 defineProps({
     user: Object,
@@ -58,10 +66,17 @@ const Logout = () => {
     router.post('/logout');
 }
 
+const goToDashboard = () => {
+    router.get('/dashboard');
+}
+
 </script>
 
 <style scoped>
 .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 250px;
   background-color: white;
   height: 100vh;
@@ -69,6 +84,7 @@ const Logout = () => {
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .sidebar-title {
@@ -79,6 +95,15 @@ const Logout = () => {
   padding-bottom: 1rem;
   border-bottom: 2px solid #f0f0f0;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.title-icon {
+  width: 28px;
+  height: 28px;
 }
 
 .user-profile {
@@ -164,6 +189,18 @@ const Logout = () => {
 .btn-icon {
   width: 20px;
   height: 20px;
+}
+
+.sidebar-btn img.btn-icon {
+  filter: none;
+}
+
+.sidebar-btn.active img.btn-icon {
+  filter: brightness(0) invert(1);
+}
+
+.sidebar-btn:hover img.btn-icon {
+  filter: brightness(0) invert(1);
 }
 
 .sidebar-btn:hover {

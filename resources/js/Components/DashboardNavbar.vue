@@ -11,16 +11,22 @@
       />
     </div>
 
-    <button class="create-btn">
-      <svg class="plus-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-      </svg>
+    <button @click="CreateRecipe" class="create-btn">
+      <img :src="whitePlusIcon" alt="" class="plus-icon" />
       Create Recipe
     </button>
   </nav>
 </template>
 
 <script setup>
+
+import { router } from '@inertiajs/vue3';
+import whitePlusIcon from '@/Assets/img/white-plus.svg';
+
+const CreateRecipe = () => {
+  router.get('/create-recipe');
+}
+
 </script>
 
 <style scoped>
