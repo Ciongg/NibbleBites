@@ -1,7 +1,6 @@
 <script setup>
 import { Head, useForm } from '@inertiajs/vue3';
 import AuthLayout from '@/Layouts/AuthLayout.vue';
-import DashboardNavbar from '@/Components/DashboardNavbar.vue';
 import Swal from 'sweetalert2';
 import { computed, ref } from 'vue';
 import trashIcon from '@/Assets/img/Trash.svg';
@@ -15,8 +14,9 @@ defineProps({
     user: Object,
 });
 
-const imagePreview = ref(null);
 
+const imagePreview = ref(null);
+const fileInput = ref(null);
 const form = useForm({
     title: '',
     ingredients: [''],
@@ -41,12 +41,20 @@ const badgeColor = computed(() => {
 });
 
 const handleImageUpload = ({target}) => {
-   const file = target.files?.[0];
-    if (!file) return;
+    const file = target.files?.[0];
+
+    if(!file) return;
 
     form.image = file;
     imagePreview.value = URL.createObjectURL(file);
-};
+
+}
+
+const removeImage = () => {
+    form.image = null;
+    imagePreview.value = null;
+    fileInput.value.value = null;
+}
 
 const createRecipe = () => {
     form.post('/create-recipe', {
@@ -61,7 +69,7 @@ const createRecipe = () => {
                 timerProgressBar: true,
                 showConfirmButton: false,
             });
-            imagePreview.value = null;
+            
         },
         onError: (errors) => {
             Swal.fire({
@@ -99,28 +107,25 @@ const removeIngredient = (index) => {
     form.ingredients.splice(index, 1);
 }
 
-const removeImage = () => {
-    form.image = null;
-    imagePreview.value = null;
-}
+
 </script>
 
 <template>
     <Head title="Create Recipe" />
         <SideNavbar/>
-            <DashboardNavbar />
             <div class="content-area">
                 <div class="recipe-container">
                     <div class="left-section">
                         <label class="image-upload">
                             <input
-                                type="file"
                                 class="hidden"
                                 accept="image/*"
+                                type="file"
                                 @change="handleImageUpload"
+                                ref="fileInput"
                             />
 
-                            <div class="image-placeholder" v-if="!imagePreview">
+                            <div class="image-placeholder" v-if="!imagePreview" >
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="camera-icon">
                                     <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
                                 </svg>
@@ -132,7 +137,7 @@ const removeImage = () => {
                                     <img :src="trashIcon" alt="Remove" class="trash-icon" />
                                 </button>
                             </div>
-                        </label>
+                        </label> 
 
                         <div class="difficulty-badge">
                             <span class="badge" :style="{ backgroundColor: badgeColor }">{{ form.difficulty.charAt(0).toUpperCase() + form.difficulty.slice(1) }}</span>
@@ -263,7 +268,6 @@ const removeImage = () => {
 }
 
 .content-area {
-    margin-top: 80px;
     margin-left: 250px;
     padding: 2rem;
 }

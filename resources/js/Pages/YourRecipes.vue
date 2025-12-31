@@ -19,14 +19,14 @@ const username = computed(() => page.props.auth?.user?.username || 'Guest');
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Your Recipes" />
     
     <DashboardNavbar />
     
     <div class="dashboard-container">
         <div class="header-section">
             <h1>Nice to see you're back {{ username }}!</h1>
-            <p class="subtitle">See what others have been cooking.</p>
+            <p class="subtitle">What will you cook today?</p>
         </div>
         
         <div v-if="recipes && recipes.length > 0" class="recipes-grid">
@@ -34,8 +34,8 @@ const username = computed(() => page.props.auth?.user?.username || 'Guest');
         </div>
         
         <div v-else class="no-recipes">
-            <p>No recipes available yet.</p>
-            <p>Be the first to create one!</p>
+            <p>You haven't created any recipes yet.</p>
+            <p>Click "Create Recipe" to get started!</p>
         </div>
     </div>
 </template>

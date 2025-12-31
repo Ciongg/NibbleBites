@@ -26,6 +26,8 @@ return new class extends Migration
             $table->boolean('is_private')->default(false);
             $table->boolean('is_vegan')->default(false);
             $table->integer('nibbled_count')->default(0);
+            $table->integer('likes_count')->default(0);
+            $table->integer('views_count')->default(0);
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use App\Models\Recipe;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -35,9 +36,18 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        return [
-            ...parent::share($request),
-            //
-        ];
+        return array_merge(parent::share($request), [
+            'auth' => [
+                'user' => $request->user() ? [
+                    'id' => $request->user()->id,
+                    'username' => $request->user()->username,
+                    'email' => $request->user()->email,
+                    'phone_number' => $request->user()->phone_number,
+                    'bio' => $request->user()->bio,
+                    'location' => $request->user()->location,
+                    'recipes_count' => Recipe::where('user_id', $request->user()->id)->count(),
+                ] : null,
+            ],
+        ]);
     }
 }

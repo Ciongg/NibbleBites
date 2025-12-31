@@ -21,6 +21,7 @@ class Recipe extends Model
         'is_private',
         'is_vegan',
         'nibbled_count',
+        'views_count ',
     ];
 
     protected $casts = [
@@ -31,10 +32,31 @@ class Recipe extends Model
         'servings' => 'integer',
         'calories_per_serving' => 'integer',
         'nibbled_count' => 'integer',
+        'views_count ' => 'integer',
     ];
+
+    protected $appends = ['is_nibbled', 'nibbled_count'];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function nibbledByUsers()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
+    public function getIsNibbledAttribute()
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+        return $this->nibbledByUsers()->where('user_id', auth()->id())->exists();
+    }
+
+    public function getNibbledCountAttribute()
+    {
+        return $this->nibbledByUsers()->count();
     }
 }

@@ -21,6 +21,9 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'phone_number',
+        'bio',
+        'location',
     ];
 
     /**
@@ -45,4 +48,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function nibbledRecipes(){
+        return $this->belongsToMany(Recipe::class)->withTimestamps();
+    }
+
+    public function recipes(){
+        return $this->hasMany(Recipe::class);
+    }
+
+
+    
 }

@@ -42,6 +42,8 @@ const CreateRecipe = () => {
   justify-content: space-between;
   padding: 0 2rem;
   z-index: 100;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+
 }
 
 .search-container {

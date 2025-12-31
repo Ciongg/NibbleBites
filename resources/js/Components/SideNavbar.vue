@@ -16,18 +16,18 @@
         <p class="user-email">{{ user?.email }}</p>
       </div>
       <div class="recipe-badge">
-        35 Recipes
+        {{ recipeCount }} {{ recipeCount === 1 ? 'Recipe' : 'Recipes' }}
       </div>
     </div>
 
     <nav class="sidebar-nav">
-      <button class="sidebar-btn active" @click="goToDashboard">
+      <button class="sidebar-btn" :class="{ active: isActive('dashboard') }" @click="goToDashboard">
         <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
           <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
         </svg>
-        Dashboard
+        Public Recipes
       </button>
-      <button class="sidebar-btn">
+      <button class="sidebar-btn" :class="{ active: isActive('your-recipes') }" @click="goToYourRecipes">
         <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
           <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
         </svg>
@@ -37,7 +37,7 @@
         <img :src="nibbledIcon" alt="" class="btn-icon" />
         Nibbled
       </button>
-      <button class="sidebar-btn">
+      <button class="sidebar-btn" :class="{active: isActive('profile')}" @click="goToProfile" >
         <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
         </svg>
@@ -55,12 +55,22 @@
 </template>
 
 <script setup>
-import { router } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 import nibbledIcon from '@/Assets/img/Nibbled.svg';
+import { computed } from 'vue';
 
-defineProps({
-    user: Object,
-});
+const page = usePage();
+
+const user = computed(() => page.props.auth?.user);
+const recipeCount = computed(() => user.value?.recipes_count || 0);
+
+const isActive = (routeName) => {
+    const currentRoute = page.url;
+    if (routeName === 'dashboard') return currentRoute === '/dashboard';
+    if (routeName === 'your-recipes') return currentRoute === '/recipes';
+    if (routeName === 'profile') return currentRoute === '/profile';
+    return false;
+};
 
 const Logout = () => {
     router.post('/logout');
@@ -70,6 +80,13 @@ const goToDashboard = () => {
     router.get('/dashboard');
 }
 
+const goToYourRecipes = () => {
+    router.get('/recipes');
+}
+
+const goToProfile = () => {
+    router.get('/profile');
+}
 </script>
 
 <style scoped>
@@ -93,7 +110,6 @@ const goToDashboard = () => {
   font-weight: bold;
   margin: 0 0 1.5rem 0;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #f0f0f0;
   text-align: center;
   display: flex;
   align-items: center;
