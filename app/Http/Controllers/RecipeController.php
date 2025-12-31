@@ -49,7 +49,7 @@ class RecipeController extends Controller
             'calories_per_serving' => 'required|integer|min:0',
             'is_private' => 'required|boolean',
             'is_vegan' => 'required|boolean',
-            'image' => 'required|image|max:2048',
+            'image' => 'nullable|image|max:2048',
         ]);
 
         $imagePath = null;
@@ -82,7 +82,8 @@ class RecipeController extends Controller
             'calories_per_serving' => 'required|integer|min:0',
             'is_private' => 'required|boolean',
             'is_vegan' => 'required|boolean',
-            'image' => 'required|image|max:2048',
+            'image' => 'nullable|image|max:2048',
+            'image_path' => 'nullable|string',
         ]);
 
         if($request->hasFile('image')){
@@ -90,12 +91,15 @@ class RecipeController extends Controller
                 Storage::disk('public')->delete($recipe->image_path);
             }
 
+        
             $imagePath = $request->file('image')->store('recipes', 'public');
+            
+
         }
 
         $recipe->update([
             ...$validated,
-            'image_path' => $imagePath ?? $recipe->image_path,
+            'image_path' => $request->hasFile('image') ?  $imagePath : $validated['image_path']
         ]);
 
         return redirect()->route('edit-recipe', $recipe->id);

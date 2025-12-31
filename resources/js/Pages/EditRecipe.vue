@@ -17,7 +17,6 @@ const props = defineProps({
 
 const form = useForm({
     title: props.recipe.title || '',
-    image_path: props.recipe.image_path || null,
     difficulty: props.recipe.difficulty || 'beginner',
     cost_range: props.recipe.cost_range || 'low',
     minutes_to_make: props.recipe.minutes_to_make || 0,
@@ -28,6 +27,7 @@ const form = useForm({
     ingredients: props.recipe.ingredients || [],
     instructions: props.recipe.instructions || '',
     image: null,
+    image_path: props.recipe.image_path || null,
     _method: 'patch',
 })
 
@@ -36,9 +36,9 @@ const imagePreview = ref();
 const handleImageUpload = ({target}) => {
     const file = target.files?.[0];
     if (!file) return;
+
     form.image = file;
     imagePreview.value = URL.createObjectURL(file);
-    console.log(form.image);
 }
 
 
@@ -103,6 +103,28 @@ const badgeColor = computed(() => {
     return colors[form.difficulty] || '#90EE90';
 });
 
+const addIngredient = () => {
+    const lastIngredient = form.ingredients[form.ingredients.length - 1];
+
+    if(lastIngredient !== ''){
+        form.ingredients.push('');
+    } else {
+        Swal.fire({
+            toast: true,
+            position: 'bottom-right',
+            icon: 'info',
+            title: 'Incomplete Ingredient',
+            text: 'Please fill in the last ingredient before adding a new one.',
+            timer: 3000,
+            showConfirmButton: false,
+            timerProgressBar: true,
+        });
+    }
+}
+
+const removeIngredient = (index) => {
+    form.ingredients.splice(index, 1);
+}
 
 </script>
 
@@ -222,9 +244,12 @@ const badgeColor = computed(() => {
                                         placeholder="Ingredient..."
                                         v-model="form.ingredients[index]"
                                     />
+                                      <button v-if="form.ingredients.length > 1" class="remove-btn" @click="removeIngredient(index)">
+                                        <img :src="trashIcon" alt="Remove" class="trash-icon" />
+                                    </button>
                                 </div>
                             </div>
-                            <button class="add-ingredient-btn">
+                            <button class="add-ingredient-btn" @click="addIngredient">
                                 <img :src="redPlusIcon" alt="" class="plus-icon" />
                                 Add Ingredient
                             </button>
