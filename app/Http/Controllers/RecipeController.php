@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-
 class RecipeController extends Controller
 {
     public function show(Recipe $recipe)
@@ -13,6 +12,14 @@ class RecipeController extends Controller
         $recipe->load('user');
         
         return inertia('ViewRecipe', [
+            'recipe' => $recipe,
+        ]);
+    }
+
+    public function edit(Recipe $recipe)
+    {
+
+        return inertia('EditRecipe', [
             'recipe' => $recipe,
         ]);
     }
@@ -42,7 +49,7 @@ class RecipeController extends Controller
             'calories_per_serving' => 'required|integer|min:0',
             'is_private' => 'required|boolean',
             'is_vegan' => 'required|boolean',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'required|image|max:2048',
         ]);
 
         $imagePath = null;
@@ -61,5 +68,38 @@ class RecipeController extends Controller
 
 
         return redirect()->route('dashboard')->with('success', 'Recipe created successfully!');
+    }
+
+    public function update(Request $request, Recipe $recipe){
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'ingredients' => 'required|array',
+            'instructions' => 'required|string',
+            'difficulty' => 'required|in:beginner,intermediate,advanced',
+            'cost_range' => 'required|in:low,medium,high',
+            'minutes_to_make' => 'required|integer|min:1',
+            'servings' => 'required|integer|min:1',
+            'calories_per_serving' => 'required|integer|min:0',
+            'is_private' => 'required|boolean',
+            'is_vegan' => 'required|boolean',
+            'image' => 'required|image|max:2048',
+        ]);
+
+        if($request->hasFile('image')){
+            if($recipe->image_path){
+                Storage::disk('public')->delete($recipe->image_path);
+            }
+
+            $imagePath = $request->file('image')->store('recipes', 'public');
+        }
+
+        $recipe->update([
+            ...$validated,
+            'image_path' => $imagePath ?? $recipe->image_path,
+        ]);
+
+        return redirect()->route('edit-recipe', $recipe->id);
+
+      
     }
 }

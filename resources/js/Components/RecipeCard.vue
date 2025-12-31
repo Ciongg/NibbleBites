@@ -2,7 +2,6 @@
 import { router } from '@inertiajs/vue3';
 import nibbledIcon from '@/Assets/img/Nibbled.svg';
 import { computed, ref } from 'vue';
-
 const props = defineProps({
     recipe: Object,
 });
@@ -27,7 +26,12 @@ const costSymbol = computed(() => {
 });
 
 const viewRecipe = () => {
-    router.get(`/recipes/${props.recipe.id}`);
+
+    if (props.recipe.is_owned) {
+        router.get(route('edit-recipe', { recipe: props.recipe.id }));
+    } else {
+        router.get(route('view-recipe', { recipe: props.recipe.id }));
+    }
 };
 
 const handleNibble = (event) => {

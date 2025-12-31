@@ -35,7 +35,7 @@ class Recipe extends Model
         'views_count ' => 'integer',
     ];
 
-    protected $appends = ['is_nibbled', 'nibbled_count'];
+    protected $appends = ['is_nibbled', 'nibbled_count', 'is_owned'];
 
     public function user(): BelongsTo
     {
@@ -58,5 +58,13 @@ class Recipe extends Model
     public function getNibbledCountAttribute()
     {
         return $this->nibbledByUsers()->count();
+    }
+
+    public function getIsOwnedAttribute()
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+        return $this->user_id === auth()->id();
     }
 }
