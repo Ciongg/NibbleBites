@@ -126,12 +126,17 @@ const removeIngredient = (index) => {
     form.ingredients.splice(index, 1);
 }
 
+const goBack = () => {
+    window.history.back();
+};
 </script>
 
 <template>
     <Head title="Edit Recipe" />
         <SideNavbar/>
             <div class="content-area">
+                <button @click="goBack" class="back-btn">← Back</button>
+                
                 <div class="recipe-container">
                     <div class="left-section">
                         <label class="image-upload">
@@ -288,6 +293,25 @@ const removeIngredient = (index) => {
 .content-area {
     margin-left: 250px;
     padding: 2rem;
+    position: relative;
+}
+
+.back-btn {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    padding: 0;
+    margin-bottom: 1rem;
+}
+
+.back-btn:hover {
+    color: #666;
 }
 
 .recipe-container {
@@ -298,6 +322,7 @@ const removeIngredient = (index) => {
     grid-template-columns: 300px 1fr;
     gap: 2rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 2.5rem;
 }
 
 .left-section {

@@ -43,7 +43,7 @@ Route::get('/create-recipe', function(){
 
 Route::post('/create-recipe', [RecipeController::class, 'store'])->name('store-recipe');
 
-
+Route::get('/top-nibbled', [RecipeController::class, 'topNibbled'])->middleware('auth')->name('top-nibbled');
 
 Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile.show');
 Route::patch('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');

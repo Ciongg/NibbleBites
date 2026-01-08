@@ -33,7 +33,7 @@
         </svg>
         Your Recipes
       </button>
-      <button class="sidebar-btn">
+      <button class="sidebar-btn" :class="{active: isActive('top-nibbled')}" @click="goToTopNibbed" >
         <img :src="nibbledIcon" alt="" class="btn-icon" />
         Nibbled
       </button>
@@ -69,6 +69,7 @@ const isActive = (routeName) => {
     if (routeName === 'dashboard') return currentRoute === '/dashboard';
     if (routeName === 'your-recipes') return currentRoute === '/recipes';
     if (routeName === 'profile') return currentRoute === '/profile';
+    if (routeName === 'top-nibbled') return currentRoute === '/top-nibbled';
     return false;
 };
 
@@ -86,6 +87,10 @@ const goToYourRecipes = () => {
 
 const goToProfile = () => {
     router.get('/profile');
+}
+
+const goToTopNibbed = () => {
+  router.get('/top-nibbled');
 }
 </script>
 

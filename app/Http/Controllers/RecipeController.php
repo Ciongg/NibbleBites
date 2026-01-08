@@ -7,6 +7,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 class RecipeController extends Controller
 {
+
+    public function topNibbled()
+    {
+        $recipes = Recipe::withCount('nibbledByUsers')
+            ->orderByDesc('nibbled_by_users_count')
+            ->take(10)
+            ->get();
+
+        return inertia('TopNibbled', [
+            'recipes' => $recipes,
+        ]);
+    }
+
     public function show(Recipe $recipe)
     {
         $recipe->load('user');
