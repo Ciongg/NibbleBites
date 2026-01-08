@@ -5,7 +5,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AIGenerateRecipeController;
 use App\Models\Recipe;
+
 
 Route::get('/', function () {
     return inertia('Homepage');
@@ -48,3 +50,7 @@ Route::get('/top-nibbled', [RecipeController::class, 'topNibbled'])->middleware(
 Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth')->name('profile.show');
 Route::patch('/profile', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
+
+Route::get('/ai-generate-recipe', [AIGenerateRecipeController::class, 'show'])->middleware('auth')->name('ai-generate-recipe');
+Route::post('/ai-generate-recipe/generate', [AIGenerateRecipeController::class, 'generateRecipe'])->middleware('auth')->name('ai-generate-recipe-generate');
+Route::post('/ai-generate-recipe/save', [AIGenerateRecipeController::class, 'store'])->middleware('auth')->name('ai-generate-recipe-save');

@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+    ],
+
+    'azure' => [
+        'api_key' => env('AZURE_API_KEY'),
+        'api_endpoint' => env('AZURE_API_ENDPOINT'),
+    ]
+
 ];

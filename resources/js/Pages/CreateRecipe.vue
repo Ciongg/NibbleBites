@@ -103,6 +103,13 @@ const addIngredient = () => {
     }
 }
 
+const handleIngredientKeydown = (event, index) => {
+    if(event.key === 'Enter') {
+        event.preventDefault();
+        addIngredient();
+    }
+}
+
 const removeIngredient = (index) => {
     form.ingredients.splice(index, 1);
 }
@@ -224,6 +231,7 @@ const removeIngredient = (index) => {
                                         class="ingredient-input" 
                                         placeholder="Ingredient..."
                                         v-model="form.ingredients[index]"
+                                        @keydown="handleIngredientKeydown($event, index)"
                                     />
                                     <button v-if="form.ingredients.length > 1" class="remove-btn" @click="removeIngredient(index)">
                                         <img :src="trashIcon" alt="Remove" class="trash-icon" />

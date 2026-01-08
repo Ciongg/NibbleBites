@@ -35,7 +35,7 @@
                     <div v-if="index < 5" class="ranking-banner">
                         <span class="banner-text">TOP {{ index + 1 }}</span>
                     </div>
-                    <RecipeCard :recipe="recipe" :showBackButton="index === 0" />
+                    <RecipeCard :recipe="recipe" />
                 </div>
             </div>
         </div>

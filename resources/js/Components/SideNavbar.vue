@@ -35,8 +35,17 @@
       </button>
       <button class="sidebar-btn" :class="{active: isActive('top-nibbled')}" @click="goToTopNibbed" >
         <img :src="nibbledIcon" alt="" class="btn-icon" />
-        Nibbled
+        Top Nibbled
       </button>
+      
+      <button class="sidebar-btn" :class="{active: isActive('ai-generate-recipe')}" @click="goToAIGenerateRecipe" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
+        </svg>
+        
+        Generate Recipe
+      </button>
+
       <button class="sidebar-btn" :class="{active: isActive('profile')}" @click="goToProfile" >
         <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -70,6 +79,7 @@ const isActive = (routeName) => {
     if (routeName === 'your-recipes') return currentRoute === '/recipes';
     if (routeName === 'profile') return currentRoute === '/profile';
     if (routeName === 'top-nibbled') return currentRoute === '/top-nibbled';
+    if (routeName === 'ai-generate-recipe') return currentRoute === '/ai-generate-recipe';
     return false;
 };
 
@@ -91,6 +101,10 @@ const goToProfile = () => {
 
 const goToTopNibbed = () => {
   router.get('/top-nibbled');
+}
+
+const goToAIGenerateRecipe = () => {
+  router.get('/ai-generate-recipe');
 }
 </script>
 
