@@ -11,6 +11,7 @@ class RecipeController extends Controller
     public function topNibbled()
     {
         $recipes = Recipe::withCount('nibbledByUsers')
+            ->where('is_private', false)
             ->orderByDesc('nibbled_by_users_count')
             ->take(10)
             ->get();
@@ -24,6 +25,16 @@ class RecipeController extends Controller
     {
         $recipe->load('user');
         
+        // Check if recipe is private
+        if ($recipe->is_private) {
+            // Only the owner can view private recipes
+            if (!auth()->check() || auth()->id() !== $recipe->user_id) {
+                return inertia('Error403', [
+                    'message' => 'This recipe is private and you do not have permission to view it.'
+                ])->toResponse(request())->setStatusCode(403);
+            }
+        }
+        
         return inertia('ViewRecipe', [
             'recipe' => $recipe,
         ]);
@@ -31,6 +42,12 @@ class RecipeController extends Controller
 
     public function edit(Recipe $recipe)
     {
+        // Only the owner can edit their recipe
+        if (auth()->id() !== $recipe->user_id) {
+            return inertia('Error403', [
+                'message' => 'You are not authorized to edit this recipe.'
+            ])->toResponse(request())->setStatusCode(403);
+        }
 
         return inertia('EditRecipe', [
             'recipe' => $recipe,
@@ -84,6 +101,13 @@ class RecipeController extends Controller
     }
 
     public function update(Request $request, Recipe $recipe){
+        // Only the owner can update their recipe
+        if (auth()->id() !== $recipe->user_id) {
+            return inertia('Error403', [
+                'message' => 'You are not authorized to update this recipe.'
+            ])->toResponse(request())->setStatusCode(403);
+        }
+        
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'ingredients' => 'required|array',
@@ -118,5 +142,28 @@ class RecipeController extends Controller
         return redirect()->route('edit-recipe', $recipe->id);
 
       
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('q', '');
+        
+        $recipes = Recipe::where('title', 'like', '%' . $query . '%')
+            ->where('user_id', '!=', auth()->id())
+            ->where('is_private', false)
+            ->get();
+
+        // Handle AJAX autocomplete requests
+        if ($request->wantsJson() || $request->input('autocomplete')) {
+            return response()->json([
+                'recipes' => $recipes,
+            ]);
+        }
+
+        // Handle full page requests (including refresh)
+        return inertia('SearchResults', [
+            'recipes' => $recipes,
+            'query' => $query,
+        ]);
     }
 }

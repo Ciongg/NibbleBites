@@ -43,6 +43,9 @@ const goBack = () => {
                     <span class="badge" :style="{ backgroundColor: badgeColor }">
                         {{ recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1) }}
                     </span>
+                    <span v-if="recipe.is_vegan" class="badge vegan-badge">
+                        Vegan
+                    </span>
                 </div>
 
                 <div class="recipe-stats">
@@ -87,7 +90,6 @@ const goBack = () => {
 
                     <div class="tags">
                         <span v-if="recipe.is_private" class="tag">Private</span>
-                        <span v-if="recipe.is_vegan" class="tag vegan">Vegan</span>
                     </div>
                 </div>
             </div>
@@ -186,6 +188,8 @@ const goBack = () => {
 .difficulty-badge {
     display: flex;
     justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .badge {
@@ -195,6 +199,11 @@ const goBack = () => {
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 600;
+}
+
+.vegan-badge {
+    background-color: #4CAF50;
+    color: white;
 }
 
 .recipe-stats {
@@ -288,10 +297,6 @@ const goBack = () => {
     font-weight: 600;
 }
 
-.tag.vegan {
-    background-color: #4CAF50;
-}
-
 .right-section {
     display: flex;
     flex-direction: column;
@@ -338,12 +343,16 @@ const goBack = () => {
     color: #333;
     position: relative;
     padding-left: 2rem;
+    display: flex;
+    align-items: center;
 }
 
 .ingredient-item::before {
     content: "•";
     position: absolute;
     left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
     color: #A03535;
     font-weight: bold;
     font-size: 1.2rem;

@@ -15,7 +15,9 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return inertia('Dashboard', [
-        'recipes' => Recipe::where('user_id', '!=', auth()->id())->get()
+        'recipes' => Recipe::where('user_id', '!=', auth()->id())
+            ->where('is_private', false)
+            ->get()
     ]);
 })->middleware('auth')->name('dashboard');
 
@@ -29,6 +31,8 @@ Route::get('/recipes', function () {
 
 Route::get('/recipes/{recipe}', [RecipeController::class, 'show'])->middleware('auth')->name('view-recipe');
 Route::post('/recipes/{recipe}/nibble', [RecipeController::class, 'toggle'])->middleware('auth')->name('toggle-nibble');
+Route::get('/search', [RecipeController::class, 'search']);
+Route::get('/search/autocomplete', [RecipeController::class, 'autocomplete']);
 
 Route::get('/recipes/{recipe}/edit', [RecipeController::class, 'edit'])->middleware('auth')->name('edit-recipe');
 Route::patch('/recipes/{recipe}/edit', [RecipeController::class, 'update'])->middleware('auth')->name('update-recipe');

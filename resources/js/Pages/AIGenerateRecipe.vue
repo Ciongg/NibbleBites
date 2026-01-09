@@ -194,7 +194,7 @@ const generateRecipe = () => {
         <!-- Input Section -->
         <div class="recipe-container" v-if="!showResult">
             <div class="input-section">
-                <h1 class="page-title">AI Recipe Generator</h1>
+                <h1 class="page-title">Instant Recipe</h1>
                 <p class="page-subtitle">Enter your available ingredients and let AI create a recipe for you!</p>
 
                 <div class="ingredients-section">
@@ -660,6 +660,21 @@ const generateRecipe = () => {
     padding: 0.75rem;
     border-bottom: 1px solid #f0f0f0;
     color: #333;
+    position: relative;
+    padding-left: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.ingredients-result-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #A03535;
+    font-weight: bold;
+    font-size: 1.2rem;
 }
 
 .ingredients-result-list li:last-child {
