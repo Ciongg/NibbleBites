@@ -58,3 +58,4 @@ Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->
 Route::get('/ai-generate-recipe', [AIGenerateRecipeController::class, 'show'])->middleware('auth')->name('ai-generate-recipe');
 Route::post('/ai-generate-recipe/generate', [AIGenerateRecipeController::class, 'generateRecipe'])->middleware('auth')->name('ai-generate-recipe-generate');
 Route::post('/ai-generate-recipe/save', [AIGenerateRecipeController::class, 'store'])->middleware('auth')->name('ai-generate-recipe-save');
+Route::delete('/recipes/{recipe}', [RecipeController::class, 'destroy'])->middleware('auth')->name('delete-recipe');

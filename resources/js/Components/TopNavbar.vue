@@ -1,18 +1,28 @@
 <template>
   <nav class="top-navbar">
     <div class="navbar-content">
+      <!-- Hamburger Menu Button -->
+      <button 
+        @click="$emit('toggle-menu')" 
+        class="hamburger-button"
+        aria-label="Toggle menu"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+
       <Link href="/" class="brand">
         <img :src="nibbledIcon" alt="NibbleNotes" class="brand-icon" />
         NibbleNotes
       </Link>
       
-      <div class="nav-buttons">
-
-        <Link href="/login" class="nav-btn">
+      <div class="nav-buttons" :class="{ 'mobile-menu-open': isMobileMenuOpen }">
+        <Link href="/login" class="nav-btn" @click="$emit('close-menu')">
           <img :src="loginIcon" alt="" class="icon-small" />
           Login
         </Link>
-        <Link href="/register" class="nav-btn">
+        <Link href="/register" class="nav-btn" @click="$emit('close-menu')">
           <img :src="registerIcon" alt="" class="icon-small" />
           Register
         </Link>
@@ -26,6 +36,15 @@ import { Link } from '@inertiajs/vue3';
 import nibbledIcon from '@/Assets/img/Nibbled.svg';
 import loginIcon from '@/Assets/img/Login.svg';
 import registerIcon from '@/Assets/img/Register.svg';
+
+defineProps({
+  isMobileMenuOpen: {
+    type: Boolean,
+    default: false
+  }
+});
+
+defineEmits(['toggle-menu', 'close-menu']);
 </script>
 
 <style scoped>
@@ -33,6 +52,7 @@ import registerIcon from '@/Assets/img/Register.svg';
   background-color: white;
   padding: 1rem 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .navbar-content {
@@ -125,5 +145,80 @@ import registerIcon from '@/Assets/img/Register.svg';
   width: 18px;
   height: 18px;
   filter: brightness(0) invert(1);
+}
+
+.hamburger-button {
+  display: none;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.hamburger-button:hover {
+  background-color: #f5f5f5;
+}
+
+.hamburger-button svg {
+  width: 24px;
+  height: 24px;
+  color: #333;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .top-navbar {
+    padding: 1rem;
+  }
+
+  .hamburger-button {
+    display: block;
+  }
+
+  .brand {
+    font-size: 1.25rem;
+  }
+
+  .brand-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .nav-buttons {
+    position: fixed;
+    top: -100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    flex-direction: column;
+    width: 100%;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: top 0.3s ease;
+    z-index: 100;
+  }
+
+  .nav-buttons.mobile-menu-open {
+    top: 60px;
+  }
+
+  .nav-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand {
+    font-size: 1.1rem;
+  }
+
+  .brand-icon {
+    width: 24px;
+    height: 24px;
+  }
 }
 </style>

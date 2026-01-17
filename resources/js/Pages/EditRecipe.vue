@@ -94,6 +94,49 @@ const handleSaveChanges = () => {
        
 }
 
+const handleDeleteRecipe = () => {
+    Swal.fire({
+        title: 'Delete Recipe?',
+        text: "This action cannot be undone. Are you sure you want to delete this recipe?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#A03535',
+        cancelButtonColor: '#999',
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.delete(`/recipes/${props.recipe.id}`, {
+                onSuccess: () => {
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-right',
+                        icon: 'success',
+                        title: 'Recipe Deleted',
+                        text: 'Your recipe has been deleted successfully.',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                    });
+                },
+                onError: (errors) => {
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-right',
+                        icon: 'error',
+                        title: 'Delete Failed',
+                        text: Object.values(errors).join(' '),
+                        timer: 3000,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                    });
+                },
+            });
+        }
+    });
+};
+
 const badgeColor = computed(() => {
     const colors = {
         'beginner': '#90EE90',
@@ -272,6 +315,10 @@ const goBack = () => {
 
                         <button @click="handleSaveChanges" class="save-btn">
                             Save Changes
+                        </button>
+
+                        <button @click="handleDeleteRecipe" class="delete-btn">
+                            Delete Recipe
                         </button>
                     </div>
                 </div>
@@ -677,5 +724,24 @@ const goBack = () => {
 .save-btn:hover {
     background-color: #8a2d2d;
     box-shadow: 0 6px 12px rgba(160, 53, 53, 0.3);
+}
+
+.delete-btn {
+    background-color: #FF6B6B;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.delete-btn:hover {
+    background-color: #d55;
+    box-shadow: 0 6px 12px rgba(213, 85, 85, 0.3);
 }
 </style>

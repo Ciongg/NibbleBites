@@ -1,9 +1,16 @@
 <script setup>
 import { router } from '@inertiajs/vue3';
-import nibbledIcon from '@/Assets/img/Nibbled.svg';
+import nibbledRedIcon from '@/Assets/img/NibbledRed.svg';
+import nibbledInactiveIcon from '@/Assets/img/NibbledInactive.svg';
+import carrotIcon from '@/Assets/img/Carrot.svg';
+import meatIcon from '@/Assets/img/Meat.svg';
 import { computed, ref } from 'vue';
 const props = defineProps({
     recipe: Object,
+    variant: {
+        type: String,
+        default: 'default' // 'default' or 'grid'
+    }
 });
 
 
@@ -50,7 +57,7 @@ const handleNibble = (event) => {
 </script>
 
 <template>
-    <div class="recipe-card" @click="viewRecipe">
+    <div class="recipe-card" :class="{ 'grid-variant': variant === 'grid' }" @click="viewRecipe">
         <div class="recipe-left">
             <div class="recipe-image">
                 <img v-if="recipe.image_path" :src="`/storage/${recipe.image_path}`" :alt="recipe.title" />
@@ -98,20 +105,18 @@ const handleNibble = (event) => {
                         </div>
                         <span class="footer-underline"></span>
                     </div>
-                    <button class="footer-item nibble-btn"  @click.stop="handleNibble">
+                    <button class="footer-item nibble-btn" :class="{ 'nibbled': isNibbled }" @click.stop="handleNibble">
                         <div class="footer-content">
-                            <img :src="nibbledIcon" alt="Nibble" class="nibble-icon" />
+                            <img :src="isNibbled ? nibbledRedIcon : nibbledInactiveIcon" alt="Nibble" class="nibble-icon" />
                             <span>{{nibbleCount}} nibbles</span>
                         </div>
                         <span class="footer-underline"></span>
                     </button>
                     <div class="footer-item">
                         <div class="footer-content">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                            <span>{{ recipe.views_count ?? 0 }}k views</span>
+                            <img v-if="recipe.is_vegan" :src="carrotIcon" alt="Vegan" class="diet-icon" />
+                            <img v-else :src="meatIcon" alt="Non-Vegan" class="diet-icon" />
+                            <span>{{ recipe.is_vegan ? 'Vegan' : 'Non-Vegan' }}</span>
                         </div>
                         <span class="footer-underline"></span>
                     </div>
@@ -131,6 +136,67 @@ const handleNibble = (event) => {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     height: 380px;
+}
+
+.recipe-card.grid-variant {
+    flex-direction: column;
+    height: auto;
+}
+
+.recipe-card.grid-variant .recipe-left {
+    width: 100%;
+    height: 200px;
+}
+
+.recipe-card.grid-variant .recipe-stats {
+    padding: 0.75rem;
+}
+
+.recipe-card.grid-variant .stat-value {
+    font-size: 1.2rem;
+}
+
+.recipe-card.grid-variant .stat-label {
+    font-size: 0.7rem;
+}
+
+.recipe-card.grid-variant .difficulty-badge {
+    padding: 0.3rem 0.85rem;
+    font-size: 0.75rem;
+}
+
+.recipe-card.grid-variant .recipe-content {
+    padding: 1rem;
+}
+
+.recipe-card.grid-variant .recipe-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.recipe-card.grid-variant .recipe-ingredients {
+    height: 100px;
+    max-height: 100px;
+    margin-bottom: 1rem;
+}
+
+.recipe-card.grid-variant .ingredient-item {
+    font-size: 0.85rem;
+    margin: 0.3rem 0;
+}
+
+.recipe-card.grid-variant .view-recipe-btn {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.recipe-card.grid-variant .recipe-footer {
+    border-top: 1px solid #f0f0f0;
+    padding-top: 0.85rem;
+    gap: 0.5rem;
+    margin-top: auto;
 }
 
 .recipe-card:hover {
@@ -277,7 +343,7 @@ const handleNibble = (event) => {
 
 .recipe-ingredients {
     margin: 0 0 1.5rem 0;
-    height: 160px;
+    height: 120px;
     overflow: hidden;
 }
 
@@ -299,7 +365,7 @@ const handleNibble = (event) => {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .view-recipe-btn:hover {
@@ -311,6 +377,7 @@ const handleNibble = (event) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: auto;
 }
 
 .footer-item {
@@ -333,7 +400,7 @@ const handleNibble = (event) => {
 }
 
 .nibble-btn.nibbled .nibble-icon {
-    filter: brightness(0) saturate(100%) invert(20%) sepia(95%) saturate(1500%) hue-rotate(345deg) brightness(90%) contrast(95%);
+    filter: none;
 }
 
 .nibble-btn:active {
@@ -351,14 +418,15 @@ const handleNibble = (event) => {
 
 .footer-content svg {
     color: #A03535;
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
     flex-shrink: 0;
 }
 
-.nibble-icon {
-    width: 18px;
-    height: 18px;
+.nibble-icon,
+.diet-icon {
+    width: 22px;
+    height: 22px;
     flex-shrink: 0;
     transition: filter 0.2s ease;
 }
@@ -374,5 +442,171 @@ const handleNibble = (event) => {
     height: 0.5px;
     background-color: #A03535;
     margin-top: 0.25rem;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .recipe-card {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .recipe-left {
+        width: 100%;
+        height: 250px;
+    }
+
+    .recipe-stats {
+        padding: 0.75rem;
+    }
+
+    .stat-row {
+        gap: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+    }
+
+    .difficulty-badge {
+        padding: 0.3rem 0.85rem;
+        font-size: 0.8rem;
+    }
+
+    .recipe-content {
+        padding: 1rem;
+    }
+
+    .recipe-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .title-divider {
+        margin-bottom: 0.75rem;
+    }
+
+    .recipe-ingredients {
+        height: 120px;
+        max-height: 120px;
+        margin-bottom: 1rem;
+    }
+
+    .ingredient-item {
+        font-size: 0.9rem;
+        margin: 0.35rem 0;
+    }
+
+    .view-recipe-btn {
+        width: 100%;
+        padding: 0.65rem 1rem;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+    }
+
+    .recipe-footer {
+        border-top: 1px solid #f0f0f0;
+        padding-top: 1rem;
+        gap: 0.5rem;
+    }
+
+    .footer-item {
+        flex: 1;
+    }
+
+    .footer-content {
+        font-size: 0.9rem;
+        gap: 0.35rem;
+        justify-content: center;
+    }
+
+    .footer-content svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .nibble-icon,
+    .diet-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .cost-symbol {
+        font-size: 1rem;
+    }
+
+    .footer-underline {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .recipe-left {
+        height: 200px;
+    }
+
+    .recipe-content {
+        padding: 0.75rem;
+    }
+
+    .recipe-title {
+        font-size: 1rem;
+    }
+
+    .recipe-ingredients {
+        height: 100px;
+        max-height: 100px;
+        margin-bottom: 0.75rem;
+    }
+
+    .ingredient-item {
+        font-size: 0.85rem;
+        margin: 0.3rem 0;
+    }
+
+    .view-recipe-btn {
+        padding: 0.6rem 0.85rem;
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .recipe-footer {
+        padding-top: 0.75rem;
+    }
+
+    .footer-content {
+        font-size: 0.8rem;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .footer-content svg,
+    .nibble-icon,
+    .diet-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .cost-symbol {
+        font-size: 0.9rem;
+    }
+
+    .stat-value {
+        font-size: 1.1rem;
+    }
+
+    .stat-label {
+        font-size: 0.65rem;
+    }
+
+    .difficulty-badge {
+        padding: 0.25rem 0.7rem;
+        font-size: 0.75rem;
+    }
 }
 </style>

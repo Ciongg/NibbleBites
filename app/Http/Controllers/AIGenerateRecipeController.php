@@ -123,7 +123,7 @@ class AIGenerateRecipeController extends Controller
         $recipe = Recipe::create([
             ...$validated,
             'user_id' => auth()->id(),
-            'is_private' => false,
+            'is_private' => true,
         ]);
 
         return redirect()->route('edit-recipe', $recipe->id);

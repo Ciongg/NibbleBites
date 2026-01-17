@@ -1,7 +1,6 @@
 <script setup>
 import { Head, router } from '@inertiajs/vue3';
 import AuthLayout from '@/Layouts/AuthLayout.vue';
-import DashboardNavbar from '@/Components/DashboardNavbar.vue';
 
 defineOptions({
     layout: AuthLayout,
@@ -18,8 +17,6 @@ const goBack = () => {
 
 <template>
     <Head title="404 - Not Found" />
-    
-    <DashboardNavbar />
     
     <div class="error-container">
         <div class="error-content">
@@ -92,5 +89,57 @@ const goBack = () => {
 .back-button:hover {
     background-color: #8a2d2d;
     box-shadow: 0 4px 8px rgba(160, 53, 53, 0.3);
+}
+
+@media (max-width: 768px) {
+    .error-container {
+        margin-top: 60px;
+        margin-left: 0;
+        padding: 1rem;
+        min-height: calc(100vh - 60px - 2rem);
+    }
+
+    .error-content {
+        padding: 2rem;
+    }
+
+    .error-code {
+        font-size: 4rem;
+    }
+
+    .error-title {
+        font-size: 1.5rem;
+    }
+
+    .error-message {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .error-container {
+        padding: 0.5rem;
+    }
+
+    .error-content {
+        padding: 1.5rem;
+    }
+
+    .error-code {
+        font-size: 3rem;
+    }
+
+    .error-title {
+        font-size: 1.25rem;
+    }
+
+    .error-message {
+        font-size: 0.9rem;
+    }
+
+    .back-button {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+    }
 }
 </style>

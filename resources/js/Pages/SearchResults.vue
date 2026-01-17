@@ -1,7 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
 import AuthLayout from '@/Layouts/AuthLayout.vue';
-import DashboardNavbar from '@/Components/DashboardNavbar.vue';
 import RecipeCard from '@/Components/RecipeCard.vue';
 
 defineOptions({
@@ -17,8 +16,6 @@ defineProps({
 
 <template>
     <Head title="Search Results" />
-    
-    <DashboardNavbar />
     
     <div class="dashboard-container">
         <div class="header-section">
@@ -84,5 +81,40 @@ h1 {
 .no-recipes p:first-child {
     font-weight: 600;
     color: #333;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        margin-top: 60px;
+        margin-left: 0;
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .recipes-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-container {
+        padding: 0.5rem;
+    }
+
+    h1 {
+        font-size: 1.25rem;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+    }
 }
 </style>

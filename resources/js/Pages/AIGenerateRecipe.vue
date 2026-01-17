@@ -116,6 +116,7 @@ const saveRecipe = () => {
                 timerProgressBar: true,
                 showConfirmButton: false,
             });
+            resetPage();
         },
         onError: (errors) => {
             console.error('Error saving recipe:', errors);
@@ -293,8 +294,15 @@ const generateRecipe = () => {
                     </div>
 
                     <div class="save-recipe-section">
-                        <button @click="saveRecipe" class="save-recipe-btn">
-                            Save This Recipe
+                        <button :disabled="form.processing" @click="saveRecipe" class="save-recipe-btn">
+                            <span v-if="!form.processing">
+                                Save This Recipe
+                            </span>
+
+                            <span v-else class="loading-content">
+                                <span class="loader"></span>
+                                Saving Recipe...
+                            </span>
                         </button>
                         <span class="save-recipe-hint">This will add it to 'your recipes'</span>
                     </div>
@@ -336,7 +344,12 @@ const generateRecipe = () => {
     
 .content-area {
     margin-left: 250px;
+    margin-top: 80px;
     padding: 2rem;
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .recipe-container {
@@ -345,7 +358,8 @@ const generateRecipe = () => {
     padding: 2rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     max-width: 800px;
-    margin: 0 auto;
+    width: 100%;
+    margin: 0;
 }
 
 .input-section {
@@ -510,6 +524,7 @@ const generateRecipe = () => {
 /* Result Section Styles */
 .result-container {
     max-width: 1200px;
+    width: 100%;
 }
 
 .result-header {
@@ -718,9 +733,73 @@ const generateRecipe = () => {
     box-shadow: 0 6px 12px rgba(160, 53, 53, 0.3);
 }
 
-.save-recipe-hint {
-    font-size: 0.85rem;
-    color: #999;
-    text-align: center;
+.save-recipe-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    .content-area {
+        margin-left: 0;
+        margin-top: 60px;
+        padding: 1rem;
+        min-height: calc(100vh - 60px);
+    }
+
+    .recipe-container {
+        padding: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .page-subtitle {
+        font-size: 1rem;
+    }
+
+    .result-content {
+        grid-template-columns: 1fr;
+    }
+
+    .result-left {
+        order: 2;
+    }
+
+    .result-right {
+        order: 1;
+    }
+
+    .result-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-area {
+        padding: 0.5rem;
+    }
+
+    .recipe-container {
+        padding: 1rem;
+    }
+
+    .page-title {
+        font-size: 1.25rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .result-title {
+        font-size: 1.25rem;
+    }
+
+    .generate-btn,
+    .save-recipe-btn {
+        font-size: 1rem;
+        padding: 0.85rem 1.5rem;
+    }
 }
 </style>

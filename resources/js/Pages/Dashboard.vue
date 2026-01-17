@@ -1,7 +1,6 @@
 <script setup>
 import { Head, usePage } from '@inertiajs/vue3';
 import AuthLayout from '@/Layouts/AuthLayout.vue';
-import DashboardNavbar from '@/Components/DashboardNavbar.vue';
 import RecipeCard from '@/Components/RecipeCard.vue';
 import { computed } from 'vue';
 
@@ -20,8 +19,6 @@ const username = computed(() => page.props.auth?.user?.username || 'Guest');
 
 <template>
     <Head title="Dashboard" />
-    
-    <DashboardNavbar />
     
     <div class="dashboard-container">
         <div class="header-section">
@@ -87,5 +84,41 @@ h1 {
 .no-recipes p:first-child {
     font-weight: 600;
     color: #333;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        margin-top: 60px;
+        margin-left: 0;
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .recipes-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-container {
+        margin-top: 60px;
+        padding: 0.5rem;
+    }
+
+    h1 {
+        font-size: 1.25rem;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+    }
 }
 </style>

@@ -1,8 +1,6 @@
 <script setup>
     import {usePage, useForm} from '@inertiajs/vue3';
     import AuthLayout from '../Layouts/AuthLayout.vue';
-    import DashboardNavbar from '../Components/DashboardNavbar.vue';
-    import SideNavbar from '../Components/SideNavbar.vue';
     import { ref } from 'vue';
     import Swal from 'sweetalert2';
   
@@ -65,8 +63,6 @@
 </script>
 
 <template>
-    <SideNavbar/>
-    <DashboardNavbar/>
     <div class="content-area">
         <div class="profile-container">
             <h1 class="page-title">My Profile</h1>
@@ -262,5 +258,46 @@
 .save-btn:hover {
     background-color: #8a2d2d;
     box-shadow: 0 6px 12px rgba(160, 53, 53, 0.3);
+}
+
+@media (max-width: 768px) {
+    .content-area {
+        margin-left: 0;
+        margin-top: 60px;
+        padding: 1rem;
+        height: auto;
+        min-height: calc(100vh - 60px);
+    }
+
+    .profile-container {
+        padding: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-area {
+        padding: 0.5rem;
+    }
+
+    .profile-container {
+        padding: 1rem;
+    }
+
+    .page-title {
+        font-size: 1.25rem;
+    }
+
+    .section-title {
+        font-size: 1rem;
+    }
 }
 </style>

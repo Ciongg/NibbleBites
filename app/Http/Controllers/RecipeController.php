@@ -145,25 +145,50 @@ class RecipeController extends Controller
     }
 
     public function search(Request $request)
-    {
-        $query = $request->input('q', '');
-        
-        $recipes = Recipe::where('title', 'like', '%' . $query . '%')
-            ->where('user_id', '!=', auth()->id())
-            ->where('is_private', false)
-            ->get();
+{
+    $query = $request->input('q', '');
 
-        // Handle AJAX autocomplete requests
-        if ($request->wantsJson() || $request->input('autocomplete')) {
-            return response()->json([
-                'recipes' => $recipes,
-            ]);
-        }
+    $recipes = Recipe::where('title', 'like', "%{$query}%")
+        ->where('user_id', '!=', auth()->id())
+        ->where('is_private', false)
+        ->get();
 
-        // Handle full page requests (including refresh)
-        return inertia('SearchResults', [
-            'recipes' => $recipes,
-            'query' => $query,
-        ]);
+    return inertia('SearchResults', [
+        'recipes' => $recipes,
+        'query' => $query,
+    ]);
+}
+
+public function autocomplete(Request $request)
+{
+    $query = $request->input('q', '');
+
+    $recipes = Recipe::where('title', 'like', "%{$query}%")
+        ->where('user_id', '!=', auth()->id())
+        ->where('is_private', false)
+        ->limit(5)
+        ->get(['id', 'title']);
+
+    return response()->json([
+        'recipes' => $recipes,
+    ]);
+}
+public function destroy(Recipe $recipe)
+{
+    // Only the owner can delete their recipe
+    if (auth()->id() !== $recipe->user_id) {
+        return inertia('Error403', [
+            'message' => 'You are not authorized to delete this recipe.'
+        ])->toResponse(request())->setStatusCode(403);
     }
+
+    // Delete the image if it exists
+    if ($recipe->image_path) {
+        Storage::disk('public')->delete($recipe->image_path);
+    }
+
+    $recipe->delete();
+
+    return redirect()->route('your-recipes')->with('success', 'Recipe deleted successfully!');
+}
 }
